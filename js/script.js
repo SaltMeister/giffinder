@@ -10,43 +10,47 @@ $(document).ready(function(){
     2. get the typed input from the search input box
     3. call the functions below!
   */$("button").click(function() {
-    var input = $("input").val();
-    callGiphyAPIWithSearchTerm(input);
+      $(".gallery").html("");
+        var input = $("input").val();
+        callGiphyAPIWithSearchTerm(input);
     });
     $("input").keypress(function(e) {
-      if(e.which === 13) {
-        $("button").click();    
-      } 
+        $(".gallery").html("");
+          if(e.which === 13) {
+          $("button").click();    
+          } 
     });
   
   function giphyURLWithSearchTerm(searchTerm) {
           // write a function that will return a url for the giphy API with
     // the searchTerm provided in the parameters
     var giphyURL = "https://api.giphy.com/v1/stickers/search?q=" + searchTerm + "&api_key=dc6zaTOxFJmzC";
-     return giphyURL;
+      console.log(giphyURL);
 }
 
 
   function appendImageToGallery(srcURL) {
       // write a function that will append an <img> to the div with class="gallery"
       // using the URL provided in the parameters
-       $(".gallery, .row").append("<img src=" +srcURL+"></img>");
+       $(".gallery").append("<img src=" +srcURL+"></img>");
   }
 
   function callGiphyAPIWithSearchTerm(searchTerm) {
+    for(var i = 0; i < 4; i ++) {
           // use the giphyURLWithSearchTerm function to customize the url below
-    var giphyURL = "https://api.giphy.com/v1/stickers/search?q=" + searchTerm + "&api_key=dc6zaTOxFJmzC";
-    $.ajax({
-      url: giphyURL,
-      method: "GET",
-      success: function(response) {
-           var random = Math.floor(Math.random()*5);
-           var url = response.data[random].images.original.url;
-           appendImageToGallery(url);
-           $("body").append(giphyURLWithSearchTerm(searchTerm));
+      var giphyURL = "https://api.giphy.com/v1/stickers/search?q=" + searchTerm + "&api_key=dc6zaTOxFJmzC";
+      $.ajax({
+        url: giphyURL,
+        method: "GET",
+        success: function(response) {
+            var random = Math.floor(Math.random()*response.data.length);
+            console.log(random);
+            var url = response.data[random].images.original.url;
+            appendImageToGallery(url);
+            $("body").append(giphyURLWithSearchTerm(searchTerm));
           
-      },
-      
-    }); 
+        },
+      });
+    } 
   }
 });
